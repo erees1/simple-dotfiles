@@ -30,21 +30,19 @@ Deploy (e.g. source aliases for .zshrc, apply oh-my-zsh settings etc..)
 ```
 
 ### Step 4
-This repo comes with a preconfigured powerlevel10k theme in [`~/zsh/common/extras/p10k.zsh`](./zsh/common/extras/p10k.zsh) but you can reconfigure this by running which will launch an interactive window.
-```
-p10k configure
-```
+This repo comes with a preconfigured powerlevel10k theme in [`~/zsh/common/extras/p10k.zsh`](./zsh/common/extras/p10k.zsh) but you can reconfigure this by running `p10k configure` which will launch an interactive window.
+
 When you get to the last two options below
 ```
 Powerlevel10k config file already exists.
-Overwrite ~/git/sm-dotfiles/zsh/common/extras/p10k.zsh
+Overwrite ~/git/sm-dotfiles/zsh/common/extras/p10k.zsh?
 # Press y for YES
 
-changes to ~/.zshrc
-# Press no for NO 
+Apply changes to ~/.zshrc?
+# Press n for NO 
 ```
 
-You then will want to paste the following command into the created p10k.zsh file so that when you are in a singualarity 
+You then will want to paste the following command into the created p10k.zsh file so that when you are in a singualarity image you will have an indicator in your terminal.
 
 ```
 ------> Add 'singualarity' to the POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS < --------
@@ -58,22 +56,23 @@ typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
     singularity             # ADD THIS LINE HERE <-------
 
-....
+.......
 
-  # Example of a user-defined prompt segment. Function prompt_example will be called on every
-  # prompt if `example` prompt segment is added to POWERLEVEL9K_LEFT_PROMPT_ELEMENTS or
-  # POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS. It displays an icon and orange text greeting the user.
-  #
-  # Type `p10k help segment` for documentation and a more sophisticated example.
-  function prompt_example() {
-    p10k segment -f 208 -i '⭐' -t 'hello, %n'
-  }
+------> # Add th prompt_singularity() function beneath the prompt example section (shown below) of p10k.zsh < --------
+# Example of a user-defined prompt segment. Function prompt_example will be called on every
+# prompt if `example` prompt segment is added to POWERLEVEL9K_LEFT_PROMPT_ELEMENTS or
+# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS. It displays an icon and orange text greeting the user.
+#
+# Type `p10k help segment` for documentation and a more sophisticated example.
+function prompt_example() {
+p10k segment -f 208 -i '⭐' -t 'hello, %n'
+}
 
-------> # Add this function beneath the prompt example < --------
-  function prompt_singularity() {
-    if [ ! -z "$SINGULARITY_CONTAINER" ]; then
-      name=$(echo ${SINGULARITY_CONTAINER} | awk -F/ '{print $(NF-0)}')
-      p10k segment -f 031 -i '💫' -t "${name}"
-    fi
+ADD THIS FUNCTION HERE --------> 
+function prompt_singularity() {
+if [ ! -z "$SINGULARITY_CONTAINER" ]; then
+  name=$(echo ${SINGULARITY_CONTAINER} | awk -F/ '{print $(NF-0)}')
+  p10k segment -f 031 -i '💫' -t "${name}"
+fi
   
 ```

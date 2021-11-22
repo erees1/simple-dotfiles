@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 # -------------------------------------------------------------------
 # personal
 # -------------------------------------------------------------------
@@ -59,12 +57,6 @@ alias 7='cd -7'
 alias 8='cd -8'
 alias 9='cd -9'
 
-
-# cd into created directory
-function mkcd () {
-  case "$1" in /*) :;; *) set -- "./$1";; esac
-  mkdir -p "$1" && cd "$1"
-}
 
 #-------------------------------------------------------------
 # git
@@ -140,21 +132,3 @@ alias lm='ls -al |more'   # pipe through 'more'
 alias lr='ls -lR'         # recursive ls
 alias tree='tree -Csu'    # nice alternative to 'recursive ls'
 
-#-------------------------------------------------------------
-# chmod
-#-------------------------------------------------------------
-
-chw () {
-  if [ "$#" -eq 1 ]; then
-    chmod a+w $1
-  else
-    echo "Usage: chw <dir>" >&2
-  fi
-}
-chx () {
-  if [ "$#" -eq 1 ]; then
-    chmod a+x $1
-  else
-    echo "Usage: chx <dir>" >&2
-  fi
-}

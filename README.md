@@ -80,3 +80,8 @@ fi
 ### Optional
 Included in this repo are the onedark and onedarker color schemes for iterm, you can use these if you want just go to import under profiles > colors > color\_presets in settings. 
 
+### Other examples
+Linked below are some other peoples dotfiles
+* [Ed's](github.com/erees1/dotfiles) - (Very) extensive nvim config, custom tmux theme, vim keybindings in terminal, gitconfig, install scripts for nvim (nightly) and delta (nicer looking git diff)
+* [Sam's](https://github.com/samringer/dotfiles) - More lightweight nvim conifg, example of zsh theme that doesn't use p10k, karabiner config (e.g. to remap capslock to ctrl), vim keybindings in terminal
+

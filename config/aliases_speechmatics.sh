@@ -153,17 +153,36 @@ qcat () {
   cat $(qlog $@)
 }
 qlog () {
-  # Get the file path of the log for a job running on the queue
-  # example: qlog 24322
+  # Get log path of job
   if [ "$#" -eq 1 ]; then
-    echo $(qstat -j $1 | grep stdout_path_list | cut -d ":" -f4) 
+    echo $(qstat -j $1 | grep stdout_path_list | cut -d ":" -f4)
   elif [ "$#" -eq 2 ]; then
-    qq_dir=$(qlog $1)
-    echo $(ls ${qq_dir}/*o${1}.${2})
+    log_path=$(qlog $1)
+    base_dir=$(echo $log_path | rev | cut -d "/" -f3- | rev)
+    filename=$(basename $log_path)
+    echo ${base_dir}/log/${filename%.log}.${2}.log
   else
-    echo "Usage: q<command> <jobid>" >&2
-    echo "Usage: q<command> <array_jobid> <sub_jobid>" >&2
+    echo "Usage: qlog <jobid>" >&2
+    echo "Usage: qlog <array_jobid> <sub_jobid>" >&2
   fi
+}
+
+qdesc () {
+  qstat | tail -n +3 | while read line; do
+    job=$(echo $line | awk '{print $1}')
+    if [[ ! $(qstat -j $job | grep "job-array tasks") ]]; then
+      echo $job $(qlog $job)
+    else
+      qq_dir=$(qlog $job)
+      job_status=$(echo $line | awk '{print $5}')
+      if [ $job_status = 'r' ]; then
+        sub_job=$(echo $line | awk '{print $10}')
+        echo $job $sub_job $(qlog $job $sub_job)
+      else
+        echo $job $qq_dir $job_status
+      fi
+    fi
+  done
 }
 
 qrecycle () {

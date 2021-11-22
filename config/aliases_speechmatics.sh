@@ -54,8 +54,10 @@ alias mut="make unittest"
 # -------------------------------------------------------------------
 
 alias tb="singularity exec $TENSOR_BOARD_SIF tensorboard --host=$HOST_IP_ADDR --reload_multifile true --logdir=."
-alias tbkill="ps aux | grep tensorboard | grep edwardr | awk '{print \$2}' | xargs kill"
 tblink () {
+  # Creates simlinks from specified folders to ~/tb/x where x is an incrmenting number
+  # and luanches tensorboard
+  # example: `tblink ./lm/20210824 ./lm/20210824_ablation ./lm/20210825_updated_data`
   if [ "$#" -eq 0 ]; then
     logdir=$(pwd)
   else
@@ -85,6 +87,8 @@ tblink () {
   singularity exec "$TENSOR_BOARD_SIF" tensorboard --host=$HOST_IP_ADDR --reload_multifile true --logdir=$logdir
 }
 tbadd() {
+  # Add experiment folder to existing tensorboard directory (see tblink)
+  # example: `tbadd ./lm/20210825 25` will symlink ./lm/20210824 to ~/tb/25
   if [ "$#" -eq 2 ]; then
     tbdir="$HOME/tb"
     linkdir=$(rl $1)
@@ -114,6 +118,11 @@ alias wqq="watch $full_queue"
 
 # Queue functions
 qlogin () {
+  # Function to request gpu or cpu access
+  # example:
+  #    qlogin 2                request 2 gpus
+  #    qlogin cpu 1            request 1 cpu slot
+  #    qlogin 1 aml-gpu.q@b5   request 1 gpu on b5
   if [ "$#" -eq 1 ]; then
     /usr/bin/qlogin -now n -pe smp $1 -q aml-gpu.q -l gpu=$1 -N D_$(whoami)
   elif [ "$#" -eq 2 ]; then
@@ -144,6 +153,8 @@ qcat () {
   cat $(qlog $@)
 }
 qlog () {
+  # Get the file path of the log for a job running on the queue
+  # example: qlog 24322
   if [ "$#" -eq 1 ]; then
     echo $(qstat -j $1 | grep stdout_path_list | cut -d ":" -f4) 
   elif [ "$#" -eq 2 ]; then
@@ -154,26 +165,26 @@ qlog () {
     echo "Usage: q<command> <array_jobid> <sub_jobid>" >&2
   fi
 }
-qdesc () {
-  qstat | tail -n +3 | while read line; do
-    job=$(echo $line | awk '{print $1}')
-    if [ -z "$(qstat -j $job | grep "job-array tasks")" ]; then
-      echo $job $(qlog $job)
-    else
-      qq_dir=$(qlog $job)
-      if [ $(echo $line | awk '{print $5}') = 'r' ]; then
-        sub_job=$(echo $line | awk '{print $10}')
-        qq_dir=$(qlog $job)
-        log_file=$(find ${qq_dir} -name "*o${job}.${sub_job}")
-        echo $job $sub_job $(grep -o -m 1 -E "expdir=[^ ]* "  $log_file | cut -d "=" -f2)
-      else
-        echo $job $qq_dir "qw"
-      fi
-    fi
-  done
+
+qrecycle () {
+    [ ! -z $SINGULARITY_CONTAINER ] && ssh localhost "qrecycle $@" || command qrecycle "$@";
+}
+
+qupdate () {
+    [ ! -z $SINGULARITY_CONTAINER ] && ssh localhost "qupdate"|| command qupdate ;
 }
 
 # Only way to get a gpu is via queue
 if [ -z $CUDA_VISIBLE_DEVICES ]; then
   export CUDA_VISIBLE_DEVICES=
 fi
+
+# -------------------------------------------------------------------
+# Cleaning processes
+# -------------------------------------------------------------------
+
+clean_vm () {
+    ps -ef | grep zsh | awk '{print $2}' | xargs sudo kill
+    ps -ef | grep vscode | awk '{print $2}' | xargs sudo kill
+}
+

@@ -30,12 +30,12 @@ Deploy (e.g. source aliases for .zshrc, apply oh-my-zsh settings etc..)
 ```
 
 ### Step 4
-This repo comes with a preconfigured powerlevel10k theme in [`~/zsh/common/extras/p10k.zsh`](./zsh/common/extras/p10k.zsh) but you can reconfigure this by running `p10k configure` which will launch an interactive window.
+This repo comes with a preconfigured powerlevel10k theme in [`./conifg/p10k.zsh`](./config/p10k.zsh) but you can reconfigure this by running `p10k configure` which will launch an interactive window.
 
 When you get to the last two options below
 ```
 Powerlevel10k config file already exists.
-Overwrite ~/git/sm-dotfiles/zsh/common/extras/p10k.zsh?
+Overwrite ~/git/sm-dotfiles/config/p10k.zsh?
 # Press y for YES
 
 Apply changes to ~/.zshrc?

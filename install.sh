@@ -80,5 +80,6 @@ else
         ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search 
     
     echo " --------- INSTALLED SUCCESSFULLY ✅ ----------- "
+    echo " --------- NOW RUN ./deploy.sh [OPTION] -------- "
 fi
 

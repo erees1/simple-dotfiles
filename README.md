@@ -11,7 +11,7 @@ Clone this repo
 ```bash
 git@gitlab1.speechmatics.io:aml/sm-dotfiles.git ~/git/dotfiles
 ```
-you probably will also want to have push this repo to your personal github
+you probably will also want to push this repo to your personal github
 
 ### Step 2
 Install dependencies (e.g. oh-my-zsh and related plugins),you can specify options to install specific programs: tmux, zsh

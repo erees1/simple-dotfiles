@@ -1,8 +1,8 @@
-# dotfiles
+# Speechmatics dotfiles
 
-This repo provides a minimal working set of dotfiles for new starters at Speechmatics, it is not intented to be exhaustive. Suggestions for useful addiotions are welcome.
+This repo provides a minimal working set of dotfiles for new starters at Speechmatics, it is not intended to be exhaustive. Suggestions for useful additions are welcome.
 
-Notable ommisions include any vim/nvim setup - speak to Ed / Sam if you want to learn more about that.
+Notable omissions include any vim/nvim setup - speak to Ed / Sam if you want to learn more about that.
 
 ## Installation
 
@@ -14,11 +14,11 @@ git@gitlab1.speechmatics.io:aml/sm-dotfiles.git ~/git/dotfiles
 you probably will also want to have push this repo to your personal github
 
 ### Step 2
-Install dependancies (e.g. oh-my-zsh and related plugins),you can specify options to install specific programs: tmux, zsh
+Install dependencies (e.g. oh-my-zsh and related plugins),you can specify options to install specific programs: tmux, zsh
 ```bash
-# Install dependancies + tmux & zsh
+# Install dependencies + tmux & zsh
 ./install.sh --tmux --zsh
-# Install just the dependancies
+# Install just the dependencies
 ./install.sh
 ```
 
@@ -69,7 +69,7 @@ typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     p10k segment -f 208 -i '⭐' -t 'hello, %n'
   }
 
-------> # Add this function beneth the prompt example < --------
+------> # Add this function beneath the prompt example < --------
   function prompt_singularity() {
     if [ ! -z "$SINGULARITY_CONTAINER" ]; then
       name=$(echo ${SINGULARITY_CONTAINER} | awk -F/ '{print $(NF-0)}')

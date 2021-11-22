@@ -30,7 +30,7 @@ Deploy (e.g. source aliases for .zshrc, apply oh-my-zsh settings etc..)
 ```
 
 ### Step 4
-This repo comes with a preconfigured powerlevel10k theme but you can reconfigure this by running which will launch an interactive window.
+This repo comes with a preconfigured powerlevel10k theme in [`~/zsh/common/extras/p10k.zsh`](./zsh/common/extras/p10k.zsh) but you can reconfigure this by running which will launch an interactive window.
 ```
 p10k configure
 ```

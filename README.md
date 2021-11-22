@@ -2,7 +2,7 @@
 
 This repo provides a minimal working set of dotfiles for new starters at Speechmatics, it is not intented to be exhaustive. Suggestions for useful addiotions are welcome.
 
-There is a 
+Notable ommisions include any vim/nvim setup - speak to Ed / Sam if you want to learn more about that.
 
 ## Installation
 

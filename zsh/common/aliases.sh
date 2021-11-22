@@ -68,6 +68,7 @@ alias g="git"
 alias gcl="git clone"
 alias ga="git add"
 alias gaa="git add ."
+alias gau="git add -u"
 alias gc="git commit -m"
 alias gp="git push"
 alias gpf="git push -f"
@@ -100,6 +101,9 @@ alias gstp="git stash pop"
 alias gsta="git stash apply"
 alias gstd="git stash drop"
 alias gstc="git stash clear"
+
+alias ggsup='git branch --set-upstream-to=origin/$(git_current_branch)'
+alias gpsup='git push --set-upstream origin $(git_current_branch)'
 
 #-------------------------------------------------------------
 # tmux

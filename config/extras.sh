@@ -25,8 +25,6 @@ bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
  
 
-export FZF_DEFAULT_OPTS='--color=16,bg:-1,bg+:15,hl:4,hl+:4,fg:-1,fg+:-1,gutter:-1,pointer:-1,marker:-1,prompt:1 --height 40% --reverse'
-
 # This speeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
 pasteinit() {
@@ -44,3 +42,20 @@ function chpwd() {
  emulate -L zsh
  ls
 }
+
+
+# git add ci and push
+function git_prepare() {
+   if [ -n "$BUFFER" ]; then
+	BUFFER="git add -u && git commit -m \"$BUFFER\" "
+   fi
+
+   if [ -z "$BUFFER" ]; then
+	BUFFER="git add -u && git commit -v "
+   fi
+		
+   zle accept-line
+}
+zle -N git_prepare
+bindkey -r "^G"
+bindkey "^G" git_prepare

@@ -29,19 +29,16 @@ while (( "$#" )); do
     esac
 done
 
-# Set any variables
-if [ $LOC == "local" ] || [ $LOC == "remote" ] ; then
 
-    echo "deploying on $LOC machine..."
+echo "deploying on $LOC machine..."
 
-    # Tmux setup
-    echo "source $DOT_DIR/tmux/tmux.conf" > $HOME/.tmux.conf
+# Tmux setup
+echo "source $DOT_DIR/config/tmux.conf" > $HOME/.tmux.conf
 
-    # zshrc setup
-    source "$DOT_DIR/zsh/setup_zshrc.sh"
+# zshrc setup
+echo "source $DOT_DIR/config/zshrc.sh" > $HOME/.zshrc
+# remote/zshrc.sh adds remote specific aliases and cmds
+[ $LOC = 'remote' ] &&  echo \
+    "source $DOT_DIR/config/aliases_speechmatics.sh" >> $HOME/.zshrc
 
-else
-    echo "Error: Unsupported flags provided"
-    echo $USAGE
-    exit 1
-fi
+zsh

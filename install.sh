@@ -18,7 +18,6 @@ DOT_DIR=$(dirname $(realpath $0))
 zsh=false
 tmux=false
 force=false
-PARAMS=""
 while (( "$#" )); do
     case "$1" in
         -h|--help)
@@ -36,13 +35,11 @@ while (( "$#" )); do
     esac
 done
 
-unameOut="$(uname -s)"
-case "${unameOut}" in
+operating_system="$(uname -s)"
+case "${operating_system}" in
     Linux*)     machine=Linux;;
     Darwin*)    machine=Mac;;
-    CYGWIN*)    machine=Cygwin;;
-    MINGW*)     machine=MinGw;;
-    *)          machine="UNKNOWN:${unameOut}"
+    *)          machine="UNKNOWN:${operating_system}"
 esac
 
 # Installing on linux with apt

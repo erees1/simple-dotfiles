@@ -6,12 +6,9 @@ HOST_IP_ADDR=$(hostname -I | awk '{ print $1 }') # This gets the actual ip addr
 TENSOR_BOARD_SIF="oras://singularity-master.artifacts.speechmatics.io/tensorboard:20210213"
 
 # Quick navigation add more here
-alias cda="cd ~/git/aladdin"
-alias cda2="cd ~/git/aladdin2"
-alias cdh="cd ~/git/hydra"
-alias cdvad="cd /perish_aml02/$(whoami)/vad_workspace"
+alias a="cd ~/git/aladdin"
+alias a2="cd ~/git/aladdin2"
 alias cde="cd /exp/$(whoami)"
-alias cdco="cd /perish_aml02/$(whoami)/coreasr"
 alias cdt="cd ~/tb"
 alias cdn="cd ~/notebooks"
 
@@ -39,7 +36,7 @@ alias msad="/home/$(whoami)/git/aladdin/env/singularity.sh -c "$SHELL""
 alias msad2="/home/$(whoami)/git/aladdin2/env/singularity.sh -c "$SHELL""
 
 # Misc
-alias jpl="jupyter lab --no-browser --ip $HOST_IP_ADDR"
+alias jp="jupyter lab --no-browser --ip $HOST_IP_ADDR"
 alias ls='ls -hF --color' # add colors for filetype recognition
 alias nv='nvidia-smi'
 
@@ -56,7 +53,7 @@ alias mut="make unittest"
 # Tensorboard
 # -------------------------------------------------------------------
 
-alias tbr="singularity exec $TENSOR_BOARD_SIF tensorboard --host=$HOST_IP_ADDR --reload_multifile true --logdir=."
+alias tb="singularity exec $TENSOR_BOARD_SIF tensorboard --host=$HOST_IP_ADDR --reload_multifile true --logdir=."
 alias tbkill="ps aux | grep tensorboard | grep edwardr | awk '{print \$2}' | xargs kill"
 tblink () {
   if [ "$#" -eq 0 ]; then

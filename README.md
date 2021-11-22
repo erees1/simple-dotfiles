@@ -76,3 +76,7 @@ if [ ! -z "$SINGULARITY_CONTAINER" ]; then
 fi
   
 ```
+
+### Optional
+Included in this repo are the onedark and onedarker color schemes for iterm, you can use these if you want just go to import under profiles > colors > color\_presets in settings. 
+

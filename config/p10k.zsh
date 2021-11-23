@@ -52,6 +52,7 @@
     direnv                  # direnv status (https://direnv.net/)
     asdf                    # asdf version manager (https://github.com/asdf-vm/asdf)
     virtualenv              # python virtual environment (https://docs.python.org/3/library/venv.html)
+    singularity             # ADD THIS LINE HERE <-------
     anaconda                # conda environment (https://conda.io/)
     pyenv                   # python environment (https://github.com/pyenv/pyenv)
     goenv                   # go environment (https://github.com/syndbg/goenv)
@@ -1577,6 +1578,13 @@
   # Type `p10k help segment` for documentation and a more sophisticated example.
   function prompt_example() {
     p10k segment -f 208 -i '⭐' -t 'hello, %n'
+  }
+
+  function prompt_singularity() {
+    if [ ! -z "$SINGULARITY_CONTAINER" ]; then
+      name=$(echo ${SINGULARITY_CONTAINER} | awk -F/ '{print $(NF-0)}')
+      p10k segment -f 031 -i '💫' -t "${name}"
+    fi
   }
 
   # User-defined prompt segments may optionally provide an instant_prompt_* function. Its job

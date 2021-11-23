@@ -69,11 +69,12 @@ p10k segment -f 208 -i '⭐' -t 'hello, %n'
 }
 
 ADD THIS FUNCTION HERE --------> 
-function prompt_singularity() {
-if [ ! -z "$SINGULARITY_CONTAINER" ]; then
-  name=$(echo ${SINGULARITY_CONTAINER} | awk -F/ '{print $(NF-0)}')
-  p10k segment -f 031 -i '💫' -t "${name}"
-fi
+  function prompt_singularity() {
+    if [ ! -z "$SINGULARITY_CONTAINER" ]; then
+      name=$(echo ${SINGULARITY_CONTAINER} | awk -F/ '{print $(NF-0)}')
+      p10k segment -f 031 -i '💫' -t "${name}"
+    fi
+  }
   
 ```
 

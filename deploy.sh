@@ -37,7 +37,7 @@ echo "source $DOT_DIR/config/tmux.conf" > $HOME/.tmux.conf
 
 # zshrc setup
 echo "source $DOT_DIR/config/zshrc.sh" > $HOME/.zshrc
-# remote/zshrc.sh adds remote specific aliases and cmds
+# conifg/aliases_speechmatics.sh adds remote specific aliases and cmds
 [ $LOC = 'remote' ] &&  echo \
     "source $DOT_DIR/config/aliases_speechmatics.sh" >> $HOME/.zshrc
 

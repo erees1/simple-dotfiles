@@ -30,7 +30,7 @@ Deploy (e.g. source aliases for .zshrc, apply oh-my-zsh settings etc..)
 ```
 
 ### Step 4
-This repo comes with a preconfigured powerlevel10k theme in [`./conifg/p10k.zsh`](./config/p10k.zsh) but you can reconfigure this by running `p10k configure` which will launch an interactive window.
+This repo comes with a preconfigured powerlevel10k theme in [`./config/p10k.zsh`](./config/p10k.zsh) but you can reconfigure this by running `p10k configure` which will launch an interactive window.
 
 When you get to the last two options below
 ```
@@ -45,7 +45,7 @@ Apply changes to ~/.zshrc?
 You then will want to paste the following command into the created p10k.zsh file so that when you are in a singualarity image you will have an indicator in your terminal.
 
 ```
-------> Add 'singualarity' to the POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS < --------
+------> Add 'singularity' to the POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS < --------
 typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
     status                  # exit code of the last command

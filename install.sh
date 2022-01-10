@@ -13,8 +13,6 @@ USAGE=$(cat <<-END
 END
 )
 
-DOT_DIR=$(dirname $(realpath $0))
-
 zsh=false
 tmux=false
 force=false
@@ -44,12 +42,14 @@ esac
 
 # Installing on linux with apt
 if [ $machine == "Linux" ]; then
+    DOT_DIR=$(dirname $(realpath $0))
     [ $zsh == true ] && sudo apt-get install zsh
     [ $tmux == true ] && sudo apt-get install tmux 
 
 # Installing on mac with homebrew
 elif [ $machine == "Mac" ]; then
-    brew install wget # wget required for later downloads
+    brew install coreutils  # Mac won't have realpath before coreutils installed
+    DOT_DIR=$(dirname $(realpath $0))
     [ $zsh == true ] && brew install zsh
     [ $tmux == true ] && brew install tmux
 fi

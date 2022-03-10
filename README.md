@@ -32,6 +32,8 @@ Deploy (e.g. source aliases for .zshrc, apply oh-my-zsh settings etc..)
 ./deploy.sh  
 # Local mac machine
 ./deploy.sh --local   
+# Include simple vimrc 
+./deploy.sh --vim
 ```
 
 ### Step 4

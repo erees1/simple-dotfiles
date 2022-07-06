@@ -150,7 +150,6 @@ qtail () {
   else
     echo "Usage: qtail <jobid>" >&2
     echo "Usage: qtail <array_jobid> <sub_jobid>" >&2
-    exit 1
   fi
 }
 qlast () {
@@ -195,7 +194,6 @@ qlog () {
   else
     echo "Usage: qlog <jobid>" >&2
     echo "Usage: qlog <array_jobid> <sub_jobid>" >&2
-    exit 1
   fi
 }
 qdesc () {

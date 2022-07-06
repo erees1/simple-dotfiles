@@ -27,6 +27,8 @@ alias b2="ssh b2"
 alias b3="ssh b3"
 alias b4="ssh b4"
 alias b5="ssh b5"
+alias b6="ssh b6"
+alias b7="ssh b7"
 
 # Change to aladdin directory and activate SIF
 alias msa="make -C /home/$(whoami)/git/aladdin/ shell"
@@ -61,7 +63,7 @@ tblink () {
   if [ "$#" -eq 0 ]; then
     logdir=$(pwd)
   else
-  # setup tensorboard directory
+    # setup tensorboard directory
     tbdir="$HOME/tb"
     if [ -d "$tbdir" ]; then
       last="$(printf '%s\n' $tbdir/* | sed 's/.*\///' | sort -g -r | head -n 1)"
@@ -75,8 +77,8 @@ tblink () {
     for linkdir in "$@"; do
       linkdir=$(rl $linkdir)
       if [ ! -d $linkdir ]; then
-          echo "linkdir $linkdir does not exist"
-          return
+        echo "linkdir $linkdir does not exist"
+        return
       fi
       echo "linkdir: $linkdir"
       mkdir -p $logdir
@@ -126,12 +128,16 @@ qlogin () {
   if [ "$#" -eq 1 ]; then
     /usr/bin/qlogin -now n -pe smp $1 -q aml-gpu.q -l gpu=$1 -N D_$(whoami)
   elif [ "$#" -eq 2 ]; then
+    gpu_args=""
     if [ "$2" = "cpu" ]; then
       queue="aml-cpu.q"
+    elif  echo "$2" | grep -q "gpu" ; then
+      queue="$2"
+      gpu_args="gpu=$1"
     else
       queue="$2"
     fi
-    /usr/bin/qlogin -now n -pe smp $1 -q $queue -l gpu=$1 -N D_$(whoami)
+    /usr/bin/qlogin -now n -pe smp $1 -q $queue -l "$gpu_args" -N D_$(whoami)
   else
     echo "Usage: qlogin <num_gpus>" >&2
     echo "Usage: qlogin <num_gpus> <queue>" >&2
@@ -139,59 +145,83 @@ qlogin () {
   fi
 }
 qtail () {
-  tail -f $(qlog $@)
+  if [ "$#" -gt 0 ]; then
+    l=$(qlog $@) && tail -f $l
+  else
+    echo "Usage: qtail <jobid>" >&2
+    echo "Usage: qtail <array_jobid> <sub_jobid>" >&2
+    exit 1
+  fi
 }
 qlast () {
-  # Tail the last running job
+  # Get job_id of last running job
   job_id=$(qstat | awk '$5=="r" {print $1}' | grep -E '[0-9]' | sort -r | head -n 1)
-  echo "qtail of most recent job ${job_id}"
-  qtail ${job_id} 
+  if [ ! -z $job_id ]; then
+    echo $job_id
+  else
+    echo "no jobs found" >&2
+  fi
 }
 qless () {
   less $(qlog $@)
 }
 qcat () {
-  cat $(qlog $@)
+  l=$(qlog $@) && cat $l
+}
+echo_if_exist() {
+  [ -f $1 ] && echo $1
 }
 qlog () {
   # Get log path of job
+  if [ "$1" = "-l" ]; then
+    job_id=$(qlast)
+  else
+    job_id=$1
+  fi
   if [ "$#" -eq 1 ]; then
-    echo $(qstat -j $1 | grep stdout_path_list | cut -d ":" -f4)
+    echo $(qstat -j $job_id | grep stdout_path_list | cut -d ":" -f4)
   elif [ "$#" -eq 2 ]; then
-    log_path=$(qlog $1)
+    # Array jobs are a little tricky
+    log_path=$(qlog $job_id)
     base_dir=$(echo $log_path | rev | cut -d "/" -f3- | rev)
     filename=$(basename $log_path)
-    echo ${base_dir}/log/${filename%.log}.${2}.log
+    # Could be a number of schemes so just try them all
+    echo_if_exist ${base_dir}/log/${filename} && return 0
+    echo_if_exist ${base_dir}/log/${filename%.log}${2}.log && return 0
+    echo_if_exist ${base_dir}/log/${filename%.log}.${2}.log && return 0
+    echo_if_exist ${base_dir}/${filename%.log}.${2}.log  && return 0
+    echo_if_exist ${base_dir}/${filename%.log}${2}.log && return 0
+    echo "log file for job $job_id not found" >&2 && return 1
   else
     echo "Usage: qlog <jobid>" >&2
     echo "Usage: qlog <array_jobid> <sub_jobid>" >&2
+    exit 1
   fi
 }
-
 qdesc () {
   qstat | tail -n +3 | while read line; do
-    job=$(echo $line | awk '{print $1}')
-    if [[ ! $(qstat -j $job | grep "job-array tasks") ]]; then
-      echo $job $(qlog $job)
+  job=$(echo $line | awk '{print $1}')
+  if [[ ! $(qstat -j $job | grep "job-array tasks") ]]; then
+    echo $job $(qlog $job)
+  else
+    qq_dir=$(qlog $job)
+    job_status=$(echo $line | awk '{print $5}')
+    if [ $job_status = 'r' ]; then
+      sub_job=$(echo $line | awk '{print $10}')
+      echo $job $sub_job $(qlog $job $sub_job)
     else
-      qq_dir=$(qlog $job)
-      job_status=$(echo $line | awk '{print $5}')
-      if [ $job_status = 'r' ]; then
-        sub_job=$(echo $line | awk '{print $10}')
-        echo $job $sub_job $(qlog $job $sub_job)
-      else
-        echo $job $qq_dir $job_status
-      fi
+      echo $job $qq_dir $job_status
     fi
-  done
+  fi
+done
 }
 
 qrecycle () {
-    [ ! -z $SINGULARITY_CONTAINER ] && ssh localhost "qrecycle $@" || command qrecycle "$@";
+  [ ! -z $SINGULARITY_CONTAINER ] && ssh localhost "qrecycle $@" || command qrecycle "$@";
 }
 
 qupdate () {
-    [ ! -z $SINGULARITY_CONTAINER ] && ssh localhost "qupdate"|| command qupdate ;
+  [ ! -z $SINGULARITY_CONTAINER ] && ssh localhost "qupdate"|| command qupdate ;
 }
 
 # Only way to get a gpu is via queue
@@ -204,7 +234,7 @@ fi
 # -------------------------------------------------------------------
 
 clean_vm () {
-    ps -ef | grep zsh | awk '{print $2}' | xargs sudo kill
-    ps -ef | grep vscode | awk '{print $2}' | xargs sudo kill
+  ps -ef | grep zsh | awk '{print $2}' | xargs sudo kill
+  ps -ef | grep vscode | awk '{print $2}' | xargs sudo kill
 }
 

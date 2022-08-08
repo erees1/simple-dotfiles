@@ -37,6 +37,13 @@ alias msa2="make -C /home/$(whoami)/git/aladdin2/ shell"
 alias msad="/home/$(whoami)/git/aladdin/env/singularity.sh -c "$SHELL""
 alias msad2="/home/$(whoami)/git/aladdin2/env/singularity.sh -c "$SHELL""
 
+# Parquet printing utilities
+PARQUET_ENV_ERROR_MESSAGE="ERROR: Open a singularity environment before using pcat, pless, phead or ptail"
+alias pcat="[ -z '$SINGULARITY_CONTAINER' ] && echo $PARQUET_ENV_ERROR_MESSAGE || python $CODE_DIR/aladdin/utils/parquet_text_printer.py"
+alias phead="[ -z '$SINGULARITY_CONTAINER' ] && echo $PARQUET_ENV_ERROR_MESSAGE || python $CODE_DIR/aladdin/utils/parquet_text_printer.py --mode head"
+alias ptail="[ -z '$SINGULARITY_CONTAINER' ] && echo $PARQUET_ENV_ERROR_MESSAGE || python $CODE_DIR/aladdin/utils/parquet_text_printer.py --mode tail"
+function pless () { pcat $@ | less; }
+
 # Misc
 alias jp="jupyter lab --no-browser --ip $HOST_IP_ADDR"
 alias ls='ls -hF --color' # add colors for filetype recognition

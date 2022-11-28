@@ -86,7 +86,7 @@ tblink () {
       --load_fast true \
       --host=$HOST_IP_ADDR \
       --reload_multifile true \
-      --logdir=$PWD \
+      --logdir="$logdir" \
       --reload_interval 8 \
       --extra_data_server_flags=--no-checksum \
       --max_reload_threads 4 \

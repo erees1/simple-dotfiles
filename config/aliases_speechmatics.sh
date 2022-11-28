@@ -3,7 +3,6 @@
 # -------------------------------------------------------------------
 
 HOST_IP_ADDR=$(hostname -I | awk '{ print $1 }') # This gets the actual ip addr
-TENSOR_BOARD_SIF="oras://singularity-master.artifacts.speechmatics.io/tensorboard:20210213"
 
 # Quick navigation add more here
 alias a="cd ~/git/aladdin"
@@ -62,8 +61,8 @@ alias mut="make unittest"
 # Tensorboard
 # -------------------------------------------------------------------
 
-alias tb="singularity exec $TENSOR_BOARD_SIF tensorboard --host=$HOST_IP_ADDR --reload_multifile true --logdir=."
 tblink () {
+    [ -z $SINGULARITY_CONTAINER ] && echo "must be run inside SIF" && return
     # Creates simlinks from specified folders to ~/tb/x where x is an incrmenting number
     # and luanches tensorboard
     # example: `tblink ./lm/20210824 ./lm/20210824_ablation ./lm/20210825_updated_data`
@@ -83,7 +82,15 @@ tblink () {
         # softlink into tensorboard directory
         _linkdirs "$logdir" "$@"
     fi
-    singularity exec "$TENSOR_BOARD_SIF" tensorboard --host=$HOST_IP_ADDR --reload_multifile true --logdir=$logdir
+    tensorboard \
+      --load_fast true \
+      --host=$HOST_IP_ADDR \
+      --reload_multifile true \
+      --logdir=$PWD \
+      --reload_interval 8 \
+      --extra_data_server_flags=--no-checksum \
+      --max_reload_threads 4 \
+      --window_title $PWD
 }
 _linkdirs() {
     logdir="$1"

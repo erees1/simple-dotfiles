@@ -83,7 +83,6 @@ tblink () {
         _linkdirs "$logdir" "$@"
     fi
     tensorboard \
-      --load_fast true \
       --host=$HOST_IP_ADDR \
       --reload_multifile true \
       --logdir="$logdir" \

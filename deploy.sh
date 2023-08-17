@@ -43,6 +43,7 @@ if [[ $VIM == "true" ]]; then
 fi
 
 # zshrc setup
+mv $HOME/.zshrc $HOME/.zshrc.bak 2>/dev/null || true
 echo "source $DOT_DIR/config/zshrc.sh" > $HOME/.zshrc
 # conifg/aliases_speechmatics.sh adds remote specific aliases and cmds
 [ $LOC = 'remote' ] &&  echo \

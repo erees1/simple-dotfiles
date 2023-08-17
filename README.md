@@ -7,7 +7,7 @@ This repo provides a minimal working set of dotfiles for new starters at Speechm
 ### Step 1
 Clone this repo
 ```bash
-git clone git@github.com:erees1/simple-dotfiles.git
+git clone git@github.com:erees1/simple-dotfiles.git ~/git/dotfiles
 ```
 
 ### Step 2

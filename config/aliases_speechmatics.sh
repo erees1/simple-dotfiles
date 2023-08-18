@@ -11,16 +11,6 @@ alias cde="cd /exp/$(whoami)"
 alias cdt="cd ~/tb"
 alias cdn="cd ~/notebooks"
 
-# Perish machines
-alias p1="cd /perish_aml01"
-alias p2="cd /perish_aml02"
-alias p3="cd /perish_aml03"
-alias p4="cd /perish_aml04"
-alias p5="cd /perish_aml05"
-alias g1="cd /perish_g01"
-alias g2="cd /perish_g02"
-alias g3="cd /perish_g03"
-
 alias b1="ssh b1"
 alias b2="ssh b2"
 alias b3="ssh b3"
@@ -28,6 +18,11 @@ alias b4="ssh b4"
 alias b5="ssh b5"
 alias b6="ssh b6"
 alias b7="ssh b7"
+alias b8="ssh b8"
+alias b9="ssh b9"
+alias b10="ssh b10"
+alias b11="ssh b11"
+alias b12="ssh b12"
 
 # Change to aladdin directory and activate SIF
 alias msa="make -C /home/$(whoami)/git/aladdin/ shell"

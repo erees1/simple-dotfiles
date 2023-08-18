@@ -1,6 +1,6 @@
 # Simple / Speechmatics dotfiles
 
-This repo provides a minimal working set of dotfiles for new starters at Speechmatics, it is not intended to be exhaustive. Suggestions for useful additions are welcome.
+I originally made this repo as a simpler verion of [my dotfiles](https://github.com/erees1/dotfiles) for new starters at Speechmatics, other people outside of Speechmatics have since found them useful so I share it here as well. It is not intended to be exhaustive. Suggestions for useful additions are welcome.
 
 ## Installation
 
@@ -51,7 +51,7 @@ Apply changes to ~/.zshrc?
 # Press n for NO 
 ```
 
-You then will want to paste the following command into the created p10k.zsh file so that when you are in a singularity image you will have an indicator in your terminal.
+If you use singularity You then will want to paste the following command into the created p10k.zsh file so that when you are in a singularity image you will have an indicator in your terminal.
 
 ```
 ------> Add 'singularity' to the POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS < --------
@@ -87,10 +87,8 @@ ADD THIS FUNCTION HERE -------->
   
 ```
 
-### Optional
-Included in this repo are the onedark and onedarker color schemes for iterm, you can use these if you want just go to import under profiles > colors > color\_presets in settings. 
 
 ### Other examples
 Linked below are some other peoples dotfiles
-* [Ed's](https://github.com/erees1/dotfiles) - (Very) extensive nvim config, custom tmux theme, vim keybindings in terminal, gitconfig, install scripts for nvim (nightly) and delta (nicer looking git diff)
+* [My full setup](https://github.com/erees1/dotfiles) - more extensive nvim config, custom tmux theme, vim keybindings in terminal, gitconfig, install scripts for nvim (nightly) and delta (nicer looking git diff, fzf, exa and others)
 * [John's](https://github.com/McHughes288/dotfiles) - Very similar to sm-dotfiles but has some useful vscode extensions if you'd like some recommendations.

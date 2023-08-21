@@ -64,3 +64,22 @@ function git_prepare() {
 zle -N git_prepare
 bindkey -r "^G"
 bindkey "^G" git_prepare
+
+function prepend-sudo {
+  if [[ $BUFFER != "sudo "* ]]; then
+    BUFFER="sudo $BUFFER"; CURSOR+=5
+    zle reset-prompt
+  fi
+}
+zle -N prepend-sudo
+bindkey "\es" prepend-sudo
+
+# convert a python command to a debug command
+function replace-python {
+  if [[ $BUFFER =~ ^python\ .* ]]; then
+    BUFFER="python3 -m debugpy --listen 5678 --wait-for-client ${BUFFER#python }"
+    zle reset-prompt
+  fi
+}
+zle -N replace-python
+bindkey "\ed" replace-python

@@ -31,7 +31,15 @@ alias du='du -kh' # file space
 alias df='df -kTh' # disk space
 alias usage='du -sh * 2>/dev/null | sort -rh'
 alias dus='du -sckx * | sort -nr'
-#
+
+# make file
+alias m='make'
+alias mc="make check"
+alias ms='make shell'
+alias mf="make format"
+alias mtest="make test"
+alias mft="make functest"
+alias mut="make unittest"
 #-------------------------------------------------------------
 # cd
 #-------------------------------------------------------------
@@ -56,7 +64,6 @@ alias 6='cd -6'
 alias 7='cd -7'
 alias 8='cd -8'
 alias 9='cd -9'
-
 
 #-------------------------------------------------------------
 # git
@@ -132,3 +139,61 @@ alias lm='ls -al |more'   # pipe through 'more'
 alias lr='ls -lR'         # recursive ls
 alias tree='tree -Csu'    # nice alternative to 'recursive ls'
 
+# -------------------------------------------------------------------
+# Tensorboard
+# -------------------------------------------------------------------
+
+tblink () {
+    [ -z $SINGULARITY_CONTAINER ] && echo "must be run inside SIF" && return
+    # Creates simlinks from specified folders to ~/tb/x where x is an incrmenting number
+    # and luanches tensorboard
+    # example: `tblink ./lm/20210824 ./lm/20210824_ablation ./lm/20210825_updated_data`
+    if [ "$#" -eq 0 ]; then
+        logdir=$(pwd)
+    else
+        # setup tensorboard directory
+        tbdir="$HOME/tb"
+        if [ -d "$tbdir" ]; then
+            last="$(printf '%s\n' $tbdir/* | sed 's/.*\///' | sort -g -r | head -n 1)"
+            new=$((last+1))
+            echo "last folder $last, new folder $new"
+            logdir="$tbdir/$new"
+        else
+            logdir="$tbdir/0"
+        fi
+        # softlink into tensorboard directory
+        _linkdirs "$logdir" "$@"
+    fi
+    tensorboard \
+      --host=$HOST_IP_ADDR \
+      --reload_multifile true \
+      --logdir="$logdir" \
+      --reload_interval 8 \
+      --extra_data_server_flags=--no-checksum \
+      --max_reload_threads 4 \
+      --window_title $PWD
+}
+_linkdirs() {
+    logdir="$1"
+    mkdir -p $logdir
+    for linkdir in "${@:2}"; do
+        linkdir=$(readlink -f $linkdir)
+        if [ ! -d $linkdir ]; then
+            echo "linkdir $linkdir does not exist"
+            return
+        fi
+        echo "symlinked $linkdir into $logdir"
+        ln -s $linkdir $logdir
+    done
+}
+tbadd() {
+    # Add experiment folder to existing tensorboard directory (see tblink)
+    # example: `tbadd 25 ./lm/20210825` will symlink ./lm/20210824 to ~/tb/25
+    if [ "$#" -gt 1 ]; then
+        tbdir="$HOME/tb"
+        logdir=$tbdir/$1
+        _linkdirs $logdir "${@:2}"
+    else
+        echo "tbadd <tb number> <exp dirs>"
+    fi
+}

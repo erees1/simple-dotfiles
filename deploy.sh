@@ -47,6 +47,6 @@ mv $HOME/.zshrc $HOME/.zshrc.bak 2>/dev/null || true
 echo "source $DOT_DIR/config/zshrc.sh" > $HOME/.zshrc
 # conifg/aliases_speechmatics.sh adds remote specific aliases and cmds
 [ $LOC = 'remote' ] &&  echo \
-    "source $DOT_DIR/config/aliases_speechmatics.sh" >> $HOME/.zshrc
+    "source $DOT_DIR/config/aliases_remote.sh" >> $HOME/.zshrc
 
 zsh

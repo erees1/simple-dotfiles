@@ -4,115 +4,13 @@
 
 HOST_IP_ADDR=$(hostname -I | awk '{ print $1 }') # This gets the actual ip addr
 
-# Quick navigation add more here
-alias a="cd ~/git/aladdin"
-alias a2="cd ~/git/aladdin2"
-alias cde="cd /exp/$(whoami)"
-alias cdt="cd ~/tb"
-alias cdn="cd ~/notebooks"
-
-alias b1="ssh b1"
-alias b2="ssh b2"
-alias b3="ssh b3"
-alias b4="ssh b4"
-alias b5="ssh b5"
-alias b6="ssh b6"
-alias b7="ssh b7"
-alias b8="ssh b8"
-alias b9="ssh b9"
-alias b10="ssh b10"
-alias b11="ssh b11"
-alias b12="ssh b12"
-
-# Change to aladdin directory and activate SIF
-alias msa="make -C /home/$(whoami)/git/aladdin/ shell"
-alias msa2="make -C /home/$(whoami)/git/aladdin2/ shell"
-# Activate aladdin SIF in current directory
-alias msad="/home/$(whoami)/git/aladdin/env/singularity.sh -c "$SHELL""
-alias msad2="/home/$(whoami)/git/aladdin2/env/singularity.sh -c "$SHELL""
-
-# Parquet printing utilities
-PARQUET_ENV_ERROR_MESSAGE="ERROR: Open a singularity environment before using pcat, pless, phead or ptail"
-alias pcat="[ -z '$SINGULARITY_CONTAINER' ] && echo $PARQUET_ENV_ERROR_MESSAGE || python $CODE_DIR/aladdin/utils/parquet_text_printer.py"
-alias phead="[ -z '$SINGULARITY_CONTAINER' ] && echo $PARQUET_ENV_ERROR_MESSAGE || python $CODE_DIR/aladdin/utils/parquet_text_printer.py --mode head"
-alias ptail="[ -z '$SINGULARITY_CONTAINER' ] && echo $PARQUET_ENV_ERROR_MESSAGE || python $CODE_DIR/aladdin/utils/parquet_text_printer.py --mode tail"
-function pless () { pcat $@ | less; }
-
 # Misc
 alias jp="jupyter lab --no-browser --ip $HOST_IP_ADDR"
 alias ls='ls -hF --color' # add colors for filetype recognition
 alias nv='nvidia-smi'
 
-# make file
-alias m='make'
-alias mc="make check"
-alias ms='make shell'
-alias mf="make format"
-alias mtest="make test"
-alias mft="make functest"
-alias mut="make unittest"
-
 # -------------------------------------------------------------------
-# Tensorboard
-# -------------------------------------------------------------------
-
-tblink () {
-    [ -z $SINGULARITY_CONTAINER ] && echo "must be run inside SIF" && return
-    # Creates simlinks from specified folders to ~/tb/x where x is an incrmenting number
-    # and luanches tensorboard
-    # example: `tblink ./lm/20210824 ./lm/20210824_ablation ./lm/20210825_updated_data`
-    if [ "$#" -eq 0 ]; then
-        logdir=$(pwd)
-    else
-        # setup tensorboard directory
-        tbdir="$HOME/tb"
-        if [ -d "$tbdir" ]; then
-            last="$(printf '%s\n' $tbdir/* | sed 's/.*\///' | sort -g -r | head -n 1)"
-            new=$((last+1))
-            echo "last folder $last, new folder $new"
-            logdir="$tbdir/$new"
-        else
-            logdir="$tbdir/0"
-        fi
-        # softlink into tensorboard directory
-        _linkdirs "$logdir" "$@"
-    fi
-    tensorboard \
-      --host=$HOST_IP_ADDR \
-      --reload_multifile true \
-      --logdir="$logdir" \
-      --reload_interval 8 \
-      --extra_data_server_flags=--no-checksum \
-      --max_reload_threads 4 \
-      --window_title $PWD
-}
-_linkdirs() {
-    logdir="$1"
-    mkdir -p $logdir
-    for linkdir in "${@:2}"; do
-        linkdir=$(readlink -f $linkdir)
-        if [ ! -d $linkdir ]; then
-            echo "linkdir $linkdir does not exist"
-            return
-        fi
-        echo "symlinked $linkdir into $logdir"
-        ln -s $linkdir $logdir
-    done
-}
-tbadd() {
-    # Add experiment folder to existing tensorboard directory (see tblink)
-    # example: `tbadd 25 ./lm/20210825` will symlink ./lm/20210824 to ~/tb/25
-    if [ "$#" -gt 1 ]; then
-        tbdir="$HOME/tb"
-        logdir=$tbdir/$1
-        _linkdirs $logdir "${@:2}"
-    else
-        echo "tbadd <tb number> <exp dirs>"
-    fi
-}
-
-# -------------------------------------------------------------------
-# Queue management
+# Queue management, for SGE
 # -------------------------------------------------------------------
 
 # Short aliases
